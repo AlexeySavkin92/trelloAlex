@@ -28,14 +28,14 @@ export const Board = () => {
 		});
 	};
 
-	const editCardName = (columnNum: number, name: string) => {
+	const editCardName = (columnNum: number, name: string, cardNum:number) => {
 		console.log(name);
 		setState({
 			...state,
 			[columnNum]: {
 				...state[columnNum],
-				cards: [...state[columnNum].cards, name],
-			},
+				cards: [...state[columnNum].cards, [cardNum]:{...state[columnNum].cards[cardNum],  name}],
+			}
 		});
 	};
 

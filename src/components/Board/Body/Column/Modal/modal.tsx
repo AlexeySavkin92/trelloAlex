@@ -19,47 +19,46 @@ export const Modal: FC<ModalProps> = ({
 	const [inputFormEditNameCard, setInputFormEditNameCard] = useState(false);
 	const isinputFormEditNameCard = () => {
 		setInputFormEditNameCard(!inputFormEditNameCard);
-
-		const setModalCloseEsc = (
-			event: React.KeyboardEvent<HTMLInputElement>
-		) => {
-			if (event.code === "Esc") {
-				{
-					onModalClose();
-				}
-			}
-		};
-
-		return (
-			<ModWin>
-				<Header onKeyDown={setModalCloseEsc}>
-					{" "}
-					<Name onClick={isinputFormEditNameCard}>
-						{name}
-						{inputFormEditNameCard && (
-							<input
-								value={inputEditNameCard}
-								onChange={(event) =>
-									setinputEditNameCard(event.target.value)
-								}
-							></input>
-						)}
-						{inputFormEditNameCard && (
-							<input
-								value="edit"
-								onClick={() => {
-									editCardName(columnNum, name);
-								}}
-							></input>
-						)}
-					</Name>
-					<CloseIcon onClick={onModalClose}>+</CloseIcon>
-				</Header>
-				<p>{cardAuthor}</p>
-			</ModWin>
-		);
 	};
+	const setModalCloseEsc = (event: React.KeyboardEvent<HTMLInputElement>) => {
+		if (event.code === "Escape") {
+			{
+				onModalClose();
+			}
+		}
+	};
+
+	return (
+		<ModWin>
+			<Header>
+				{" "}
+				<Name onClick={isinputFormEditNameCard}>
+					{name}
+					{inputFormEditNameCard && (
+						<input
+							onKeyDown={setModalCloseEsc}
+							value={inputEditNameCard}
+							onChange={(event) =>
+								setinputEditNameCard(event.target.value)
+							}
+						></input>
+					)}
+					{inputFormEditNameCard && (
+						<input
+							value="edit"
+							onClick={() => {
+								editCardName(columnNum, name);
+							}}
+						></input>
+					)}
+				</Name>
+				<CloseIcon onClick={onModalClose}>+</CloseIcon>
+			</Header>
+			<p>{cardAuthor}</p>
+		</ModWin>
+	);
 };
+
 const ModWin = styled.div`
 	position: absolute;
 	top: 50%;
