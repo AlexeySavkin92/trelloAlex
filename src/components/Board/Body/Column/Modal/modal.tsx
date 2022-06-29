@@ -2,25 +2,63 @@ import styled from "styled-components";
 import React, { FC, useState } from "react";
 
 interface ModalProps {
-	cardName: string;
+	name: string;
 	cardAuthor: string;
 	onModalClose: () => void;
+	editCardName: (columnNum: number, name: string) => void;
+	columnNum: number;
 }
 export const Modal: FC<ModalProps> = ({
-	cardName,
+	name,
 	cardAuthor,
 	onModalClose,
+	editCardName,
+	columnNum,
 }) => {
-	return (
-		<ModWin>
-			<Header>
-				{" "}
-				<Name>{cardName}</Name>{" "}
-				<CloseIcon onClick={onModalClose}>+</CloseIcon>
-			</Header>
-			<p>{cardAuthor}</p>
-		</ModWin>
-	);
+	const [inputEditNameCard, setinputEditNameCard] = useState("");
+	const [inputFormEditNameCard, setInputFormEditNameCard] = useState(false);
+	const isinputFormEditNameCard = () => {
+		setInputFormEditNameCard(!inputFormEditNameCard);
+
+		const setModalCloseEsc = (
+			event: React.KeyboardEvent<HTMLInputElement>
+		) => {
+			if (event.code === "Esc") {
+				{
+					onModalClose();
+				}
+			}
+		};
+
+		return (
+			<ModWin>
+				<Header>
+					{" "}
+					<Name onClick={isinputFormEditNameCard}>
+						{name}
+						{inputFormEditNameCard && (
+							<input
+								value={inputEditNameCard}
+								onChange={(event) =>
+									setinputEditNameCard(event.target.value)
+								}
+							></input>
+						)}
+						{inputFormEditNameCard && (
+							<input
+								value="edit"
+								onClick={() => {
+									editCardName(columnNum, name);
+								}}
+							></input>
+						)}
+					</Name>
+					<CloseIcon onClick={onModalClose}>+</CloseIcon>
+				</Header>
+				<p>{cardAuthor}</p>
+			</ModWin>
+		);
+	};
 };
 const ModWin = styled.div`
 	position: absolute;

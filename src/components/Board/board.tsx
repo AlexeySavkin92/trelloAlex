@@ -6,8 +6,7 @@ import { boardState, CardProps } from "../../store/board/state";
 export const Board = () => {
 	const [state, setState] = useState(boardState);
 
-	const del = (columnNum: number, cardNum: number) => {
-		console.log(cardNum);
+	const deleteCard = (columnNum: number, cardNum: number) => {
 		setState({
 			...state,
 			[columnNum]: {
@@ -28,7 +27,19 @@ export const Board = () => {
 			},
 		});
 	};
-	const editName = (columnNum: number, columnName: string) => {
+
+	const editCardName = (columnNum: number, name: string) => {
+		console.log(name);
+		setState({
+			...state,
+			[columnNum]: {
+				...state[columnNum],
+				cards: [...state[columnNum].cards, name],
+			},
+		});
+	};
+
+	const editColumnName = (columnNum: number, columnName: string) => {
 		console.log({ columnName });
 		setState({
 			...state,
@@ -38,7 +49,13 @@ export const Board = () => {
 	return (
 		<Wrapper>
 			<Header />
-			<Body states={state} addCard={AddCard} del={del} edit={editName} />
+			<Body
+				states={state}
+				addCard={AddCard}
+				deleteCard={deleteCard}
+				editColumnName={editColumnName}
+				editCardName={editCardName}
+			/>
 		</Wrapper>
 	);
 };

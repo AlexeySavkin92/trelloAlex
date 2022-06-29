@@ -6,8 +6,9 @@ import { Column } from "./Column";
 interface BodyProps {
 	states: Board;
 	addCard: (columnNum: number, newCard: CardProps) => void;
-	del: (columnNum: number, cardNum: number) => void;
-	edit: (columnNum: number, columnName: string) => void;
+	deleteCard: (columnNum: number, cardNum: number) => void;
+	editColumnName: (columnNum: number, columnName: string) => void;
+	editCardName: (columnNum: number, name: string) => void;
 }
 export const Body: FC<BodyProps> = (props) => {
 	return (
@@ -19,8 +20,9 @@ export const Body: FC<BodyProps> = (props) => {
 					columnName={props.states[item].columnName}
 					cards={props.states[item].cards}
 					addCard={props.addCard}
-					del={props.del}
-					edit={props.edit}
+					deleteCard={props.deleteCard}
+					editColumnName={props.editColumnName}
+					editCardName={props.editCardName}
 				/>
 			))}
 		</Main>

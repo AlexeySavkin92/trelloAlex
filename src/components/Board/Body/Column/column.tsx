@@ -36,8 +36,9 @@ interface Boarding {
 	columnName: string;
 	cards: CardProps[];
 	addCard: (columnNum: number, newCard: CardProps) => void;
-	del: (columnNum: number, cardNum: number) => void;
-	edit: (columnNum: number, columnName: string) => void;
+	deleteCard: (columnNum: number, cardNum: number) => void;
+	editColumnName: (columnNum: number, columnName: string) => void;
+	editCardName: (columnNum: number, name: string) => void;
 }
 
 export const Column: FC<Boarding> = ({
@@ -45,13 +46,14 @@ export const Column: FC<Boarding> = ({
 	columnNum,
 	cards,
 	addCard,
-	del,
-	edit,
+	deleteCard,
+	editColumnName,
+	editCardName,
 }) => {
 	const [isModalFormOpen, setIsModalFormOpen] = useState(false);
 
 	const openModalForm = () => {
-		setIsModalFormOpen(!isModalFormOpen!);
+		setIsModalFormOpen(!isModalFormOpen);
 	};
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -62,17 +64,14 @@ export const Column: FC<Boarding> = ({
 	const setModalClose = () => {
 		setIsModalOpen(false);
 	};
-	const setModalCloseEsc = (e: any) => {
-		if (e.keyCode === 27) {
-			setModalClose();
-		}
-	};
 
-	const setSubmitNameColumn = (e: any) => {
-		if (e.keyCode === 13) {
-			//	edit(columnNum, inputNameColumn);
-			console.log("hi");
-			//	isInputNameColumnClose();
+	const setSubmitNameColumn = (
+		event: React.KeyboardEvent<HTMLInputElement>
+	) => {
+		if (event.code === "Enter") {
+			editColumnName(columnNum, inputNameColumn);
+
+			isInputNameColumnClose();
 		}
 	};
 
@@ -132,25 +131,34 @@ export const Column: FC<Boarding> = ({
 		setCard([...cards, newCard]);
 	};  */
 
-	window.addEventListener("keydown", setModalCloseEsc);
-	window.addEventListener("keydown", setSubmitNameColumn);
 	/*onClick={openModalForm}>
 				{isModalFormOpen ? <input /> : "+ Add new card"}*/
 
 	return (
 		<Block>
-			<p onClick={isInputNameColumn}>{columnName}</p>
-			{inputFormNameColumn && (
-				<input
-					value={inputNameColumn}
-					onChange={(event) => setInputNameColumn(event.target.value)}
-				/>
-			)}
-			{inputFormNameColumn && (
-				<button onClick={() => edit(columnNum, inputNameColumn)}>
-					установить
-				</button>
-			)}
+			<p onClick={isInputNameColumn}>
+				{inputFormNameColumn ? (
+					<input
+						value={inputNameColumn}
+						onChange={(event) =>
+							setInputNameColumn(event.target.value)
+						}
+						onKeyDown={setSubmitNameColumn}
+					/>
+				) : (
+					<p>{columnName}</p>
+				)}
+
+				{/* {inputFormNameColumn && (
+					<input
+						value={inputNameColumn}
+						onChange={(event) =>
+							setInputNameColumn(event.target.value)
+						}
+						onKeyDown={setSubmitNameColumn}
+					/>
+				)} */}
+			</p>
 			<CarName>
 				{cards.map((item, index) => (
 					<Card
@@ -160,16 +168,18 @@ export const Column: FC<Boarding> = ({
 						author={item.author}
 						openModal={setModalOpen}
 						setCurrentCard={setCurrentCard}
-						del={del}
+						deleteCard={deleteCard}
 						columnNum={columnNum}
 					/>
 				))}
 			</CarName>
 			{isModalOpen && (
 				<Modal
-					cardName={currentCard.name}
+					name={currentCard.name}
 					cardAuthor={currentCard.author}
 					onModalClose={setModalClose}
+					editCardName={editCardName}
+					columnNum={columnNum}
 				/>
 			)}
 			<Button onClick={openModalForm}>

@@ -8,7 +8,7 @@ interface CardProps {
 	name: string;
 	author: string;
 	openModal: () => void;
-	del: (columnNum: number, cardNum: number) => void;
+	deleteCard: (columnNum: number, cardNum: number) => void;
 
 	columnNum: number;
 
@@ -31,7 +31,7 @@ export const Card: FC<CardProps> = ({
 	author,
 	openModal,
 	setCurrentCard,
-	del,
+	deleteCard,
 	columnNum,
 }) => {
 	const onCardClick = () => {
@@ -51,7 +51,7 @@ export const Card: FC<CardProps> = ({
 		<Wrapper>
 			<p onClick={onCardClick}>{name}</p>
 			<p> {cardNum}</p>
-			<button onClick={() => del(columnNum, cardNum)}>
+			<button onClick={() => deleteCard(columnNum, cardNum)}>
 				<img src="https://w7.pngwing.com/pngs/169/498/png-transparent-gray-trash-bin-art-computer-icons-icon-remove-s-miscellaneous-text-rectangle-thumbnail.png" />
 			</button>
 
