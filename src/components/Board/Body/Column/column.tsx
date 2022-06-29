@@ -38,7 +38,7 @@ interface Boarding {
 	addCard: (columnNum: number, newCard: CardProps) => void;
 	deleteCard: (columnNum: number, cardNum: number) => void;
 	editColumnName: (columnNum: number, columnName: string) => void;
-	editCardName: (columnNum: number, name: string) => void;
+	editCardName: (columnNum: number, name: string, cardNum: number) => void;
 }
 
 export const Column: FC<Boarding> = ({
@@ -63,6 +63,11 @@ export const Column: FC<Boarding> = ({
 	};
 	const setModalClose = () => {
 		setIsModalOpen(false);
+	};
+
+	const [CardNumber, setCardNumber] = useState("");
+	const isSetCardNumber = () => {
+		setCardNumber(CardNumber);
 	};
 
 	const setSubmitNameColumn = (
@@ -170,6 +175,7 @@ export const Column: FC<Boarding> = ({
 						setCurrentCard={setCurrentCard}
 						deleteCard={deleteCard}
 						columnNum={columnNum}
+						isSetCardNumber={isSetCardNumber}
 					/>
 				))}
 			</CarName>
@@ -180,6 +186,7 @@ export const Column: FC<Boarding> = ({
 					onModalClose={setModalClose}
 					editCardName={editCardName}
 					columnNum={columnNum}
+					cardNum={CardNumber}
 				/>
 			)}
 			<Button onClick={openModalForm}>

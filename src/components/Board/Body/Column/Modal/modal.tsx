@@ -5,7 +5,7 @@ interface ModalProps {
 	name: string;
 	cardAuthor: string;
 	onModalClose: () => void;
-	editCardName: (columnNum: number, name: string) => void;
+	editCardName: (columnNum: number, name: string, cardNum: number) => void;
 	columnNum: number;
 }
 export const Modal: FC<ModalProps> = ({
@@ -47,7 +47,7 @@ export const Modal: FC<ModalProps> = ({
 						<input
 							value="edit"
 							onClick={() => {
-								editCardName(columnNum, name);
+								editCardName(columnNum, name, cardNum);
 							}}
 						></input>
 					)}

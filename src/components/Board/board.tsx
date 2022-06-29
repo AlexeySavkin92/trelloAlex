@@ -28,14 +28,17 @@ export const Board = () => {
 		});
 	};
 
-	const editCardName = (columnNum: number, name: string, cardNum:number) => {
+	const editCardName = (columnNum: number, name: string, cardNum: number) => {
 		console.log(name);
 		setState({
 			...state,
 			[columnNum]: {
 				...state[columnNum],
-				cards: [...state[columnNum].cards, [cardNum]:{...state[columnNum].cards[cardNum],  name}],
-			}
+				cards: state[columnNum].cards.map((item, index) => {
+					if (index === cardNum) return { ...item, name };
+					return item;
+				}),
+			},
 		});
 	};
 

@@ -8,7 +8,7 @@ interface BodyProps {
 	addCard: (columnNum: number, newCard: CardProps) => void;
 	deleteCard: (columnNum: number, cardNum: number) => void;
 	editColumnName: (columnNum: number, columnName: string) => void;
-	editCardName: (columnNum: number, name: string) => void;
+	editCardName: (columnNum: number, name: string, cardNum: number) => void;
 }
 export const Body: FC<BodyProps> = (props) => {
 	return (
