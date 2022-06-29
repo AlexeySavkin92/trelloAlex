@@ -32,7 +32,7 @@ export const Modal: FC<ModalProps> = ({
 
 		return (
 			<ModWin>
-				<Header>
+				<Header onKeyDown={setModalCloseEsc}>
 					{" "}
 					<Name onClick={isinputFormEditNameCard}>
 						{name}
