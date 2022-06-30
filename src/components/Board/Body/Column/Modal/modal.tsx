@@ -7,6 +7,7 @@ interface ModalProps {
 	onModalClose: () => void;
 	editCardName: (columnNum: number, name: string, cardNum: number) => void;
 	columnNum: number;
+	cardNum: number;
 }
 export const Modal: FC<ModalProps> = ({
 	name,
@@ -14,6 +15,7 @@ export const Modal: FC<ModalProps> = ({
 	onModalClose,
 	editCardName,
 	columnNum,
+	cardNum,
 }) => {
 	const [inputEditNameCard, setinputEditNameCard] = useState("");
 	const [inputFormEditNameCard, setInputFormEditNameCard] = useState(false);
@@ -33,6 +35,7 @@ export const Modal: FC<ModalProps> = ({
 			<Header>
 				{" "}
 				<Name onClick={isinputFormEditNameCard}>
+					{cardNum}
 					{name}
 					{inputFormEditNameCard && (
 						<input

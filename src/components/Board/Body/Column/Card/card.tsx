@@ -9,7 +9,7 @@ interface CardProps {
 	author: string;
 	openModal: () => void;
 	deleteCard: (columnNum: number, cardNum: number) => void;
-	isSetCardNumber: () => void;
+	isSetCardNumber: (CardNumber: number) => void;
 	columnNum: number;
 
 	setCurrentCard: React.Dispatch<
@@ -46,7 +46,7 @@ export const Card: FC<CardProps> = ({
 			},
 		});
 		openModal();
-		isSetCardNumber();
+		isSetCardNumber(cardNum);
 	};
 
 	return (
@@ -55,16 +55,8 @@ export const Card: FC<CardProps> = ({
 			<p> {cardNum}</p>
 			<button onClick={() => deleteCard(columnNum, cardNum)}>
 				<img src="https://w7.pngwing.com/pngs/169/498/png-transparent-gray-trash-bin-art-computer-icons-icon-remove-s-miscellaneous-text-rectangle-thumbnail.png" />
-			</button>
-
-			<button
-				onClick={() => {
-					isSetCardNumber(cardNum);
-				}}
-			>
-				{" "}
-				<img src="https://cdn-icons-png.flaticon.com/512/25/25663.png" />
-			</button>
+			</button>{" "}
+			<img src="https://cdn-icons-png.flaticon.com/512/25/25663.png" />
 		</Wrapper>
 	);
 };

@@ -65,8 +65,8 @@ export const Column: FC<Boarding> = ({
 		setIsModalOpen(false);
 	};
 
-	const [CardNumber, setCardNumber] = useState("");
-	const isSetCardNumber = () => {
+	const [CardNumber, setCardNumber] = useState(0);
+	const isSetCardNumber = (CardNumber: number) => {
 		setCardNumber(CardNumber);
 	};
 
