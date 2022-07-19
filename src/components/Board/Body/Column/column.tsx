@@ -133,10 +133,15 @@ export const Column: FC<Boarding> = ({
 		],
 	};
 
-	const textInput = React.createRef();
+	const textInput = React.createRef<HTMLInputElement>();
 
 	const handleClick = () => {
 		textInput.current?.focus();
+	};
+
+	const opMFHC = () => {
+		handleClick();
+		openModalForm();
 	};
 
 	return (
@@ -199,13 +204,12 @@ export const Column: FC<Boarding> = ({
 					AddComment={AddComment}
 				/>
 			)}
-			<Button onClick={openModalForm}>
+			<Button onClick={opMFHC}>
 				{isModalFormOpen ? (
 					<button
-						// onClick={() => {
-						// 	addCard(columnNum, newCard);
-						// }}
-						onClick={handleClick}
+						onClick={() => {
+							addCard(columnNum, newCard);
+						}}
 					>
 						Add Card
 					</button>

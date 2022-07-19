@@ -12,13 +12,13 @@ export const Board = () => {
 		description: string,
 		cardNum: number
 	) => {
-		console.log(editDescription);
 		setState({
 			...state,
 			[columnNum]: {
 				...state[columnNum],
 				cards: state[columnNum].cards.map((item, index) => {
 					if (index === cardNum) return { ...item, description };
+
 					return item;
 				}),
 			},
@@ -46,12 +46,15 @@ export const Board = () => {
 			...state,
 			[columnNum]: {
 				...state[columnNum],
-				cards: [
-					state[columnNum].cards.map((item, index) => {
-						if (index === cardNum) return { ...item, newComment };
-						return item;
-					}),
-				],
+				cards: state[columnNum].cards.map((item, index) => {
+					console.log(cardNum);
+					if (index === cardNum)
+						return {
+							...item,
+							comment: [...item.comment, newComment],
+						};
+					return item;
+				}),
 			},
 		});
 	};
