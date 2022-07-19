@@ -1,10 +1,11 @@
 import { Card } from "./Card";
 import styled from "styled-components";
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { Comm } from "../Column/Modal/Comments/comments";
 import { Modal } from "./Modal";
 import { Form } from "../form";
 import { Board } from "../../board";
+import React from "react";
 interface ColumnName {
 	name: string;
 	columnNum: number;
@@ -132,6 +133,12 @@ export const Column: FC<Boarding> = ({
 		],
 	};
 
+	const textInput = React.createRef();
+
+	const handleClick = () => {
+		textInput.current?.focus();
+	};
+
 	return (
 		<Block>
 			<p onClick={isInputNameColumn}>
@@ -195,9 +202,10 @@ export const Column: FC<Boarding> = ({
 			<Button onClick={openModalForm}>
 				{isModalFormOpen ? (
 					<button
-						onClick={() => {
-							addCard(columnNum, newCard);
-						}}
+						// onClick={() => {
+						// 	addCard(columnNum, newCard);
+						// }}
+						onClick={handleClick}
 					>
 						Add Card
 					</button>
@@ -207,7 +215,7 @@ export const Column: FC<Boarding> = ({
 			</Button>
 			{isModalFormOpen && (
 				<input
-					autoFocus
+					ref={textInput}
 					onChange={(event) => setInputNameCard(event.target.value)}
 					onKeyDown={setSubmitNameCard}
 					onBlur={openModalForm}
