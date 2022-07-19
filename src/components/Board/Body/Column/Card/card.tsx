@@ -3,6 +3,11 @@ import styled from "styled-components";
 import { Modal } from "../Modal";
 import { FC } from "react";
 
+interface Comment {
+	userText: string;
+	author: string;
+}
+
 interface CardProps {
 	cardNum: number;
 	name: string;
@@ -11,16 +16,15 @@ interface CardProps {
 	deleteCard: (columnNum: number, cardNum: number) => void;
 	isSetCardNumber: (CardNumber: number) => void;
 	columnNum: number;
+	description: string;
+	comment: Comment[];
 
 	setCurrentCard: React.Dispatch<
 		React.SetStateAction<{
 			name: string;
 			author: string;
 			description: string;
-			comment: {
-				userText: string;
-				author: string;
-			};
+			comment: Comment[];
 		}>
 	>;
 }
@@ -34,16 +38,15 @@ export const Card: FC<CardProps> = ({
 	deleteCard,
 	columnNum,
 	isSetCardNumber,
+	description,
+	comment,
 }) => {
 	const onCardClick = () => {
 		setCurrentCard({
 			name: name,
 			author: author,
-			description: "Hi!",
-			comment: {
-				userText: "",
-				author: "",
-			},
+			description: description,
+			comment,
 		});
 		openModal();
 		isSetCardNumber(cardNum);
@@ -52,7 +55,6 @@ export const Card: FC<CardProps> = ({
 	return (
 		<Wrapper>
 			<p onClick={onCardClick}>{name}</p>
-			<p> {cardNum}</p>
 			<button onClick={() => deleteCard(columnNum, cardNum)}>
 				<img src="https://w7.pngwing.com/pngs/169/498/png-transparent-gray-trash-bin-art-computer-icons-icon-remove-s-miscellaneous-text-rectangle-thumbnail.png" />
 			</button>{" "}

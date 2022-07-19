@@ -1,14 +1,34 @@
 import styled from "styled-components";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
+import { CardProps } from "../column";
+import { createReadStream } from "fs";
+import { Comments } from "./Comments";
+import { Comm } from "../Modal/Comments/comments";
+
+interface Comment {
+	userText: string;
+	author: string;
+}
 
 interface ModalProps {
 	name: string;
 	cardAuthor: string;
 	onModalClose: () => void;
 	editCardName: (columnNum: number, name: string, cardNum: number) => void;
+	editDescription: (
+		columnNum: number,
+		description: string,
+		cardNum: number
+	) => void;
 	columnNum: number;
 	cardNum: number;
+	columnName: string;
+	description: string;
+	comment: Comment[];
+	deleteCard: (columnNum: number, cardNum: number) => void;
+	AddComment: (columnNum: number, cardNum: number, newComment: Comm) => void;
 }
+
 export const Modal: FC<ModalProps> = ({
 	name,
 	cardAuthor,
@@ -16,13 +36,26 @@ export const Modal: FC<ModalProps> = ({
 	editCardName,
 	columnNum,
 	cardNum,
+	columnName,
+	editDescription,
+	description,
+	comment,
+	deleteCard,
+	AddComment,
 }) => {
 	const [inputEditNameCard, setinputEditNameCard] = useState("");
 	const [inputFormEditNameCard, setInputFormEditNameCard] = useState(false);
 	const isinputFormEditNameCard = () => {
 		setInputFormEditNameCard(!inputFormEditNameCard);
 	};
-	const setModalCloseEsc = (event: React.KeyboardEvent<HTMLInputElement>) => {
+	const [inputComments, setInputComments] = useState("");
+	const [inputFormComments, setInputFormComments] = useState(false);
+	const isInputFormComments = () => {
+		setInputFormComments(!inputFormComments);
+	};
+
+	const setModalCloseEsc = (event: KeyboardEvent) => {
+		console.log("hi");
 		if (event.code === "Escape") {
 			{
 				onModalClose();
@@ -30,16 +63,37 @@ export const Modal: FC<ModalProps> = ({
 		}
 	};
 
+	useEffect(() => {
+		window.addEventListener("keydown", (e) => setModalCloseEsc(e));
+		return window.removeEventListener("keydown", (e) =>
+			setModalCloseEsc(e)
+		);
+	}, []);
+	const [inputDescription, setInputDescription] = useState("");
+	const [inputFormDescription, setInputFormDescription] = useState(false);
+	const isinputFormDescription = () => {
+		setInputFormDescription(!inputFormDescription);
+	};
+
+	const isDeletedCard = () => {
+		console.log("hi");
+		deleteCard(columnNum, cardNum);
+		onModalClose();
+	};
+
+	const newComment = {
+		userText: inputComments,
+		author: "",
+	};
+
 	return (
 		<ModWin>
 			<Header>
-				{" "}
-				<Name onClick={isinputFormEditNameCard}>
-					{cardNum}
-					{name}
+				{columnName}
+				<Name>
+					<p onClick={isinputFormEditNameCard}>{name}</p>
 					{inputFormEditNameCard && (
 						<input
-							onKeyDown={setModalCloseEsc}
 							value={inputEditNameCard}
 							onChange={(event) =>
 								setinputEditNameCard(event.target.value)
@@ -47,17 +101,86 @@ export const Modal: FC<ModalProps> = ({
 						></input>
 					)}
 					{inputFormEditNameCard && (
-						<input
-							value="edit"
+						<button
 							onClick={() => {
-								editCardName(columnNum, name, cardNum);
+								editCardName(
+									columnNum,
+									inputEditNameCard,
+									cardNum
+								);
 							}}
-						></input>
+						>
+							Edit
+						</button>
 					)}
 				</Name>
+				<Description>
+					<p
+						onClick={() => {
+							isinputFormDescription();
+						}}
+					>
+						Description
+					</p>
+					{description}{" "}
+					{inputFormDescription && (
+						<input
+							value={inputDescription}
+							onChange={(event) =>
+								setInputDescription(event.target.value)
+							}
+						></input>
+					)}
+					{inputFormDescription && (
+						<button
+							onClick={() => {
+								editDescription(
+									columnNum,
+									inputDescription,
+									cardNum
+								);
+							}}
+						>
+							Add description
+						</button>
+					)}
+					{!inputFormDescription && <p>{inputDescription}</p>}
+				</Description>
+
 				<CloseIcon onClick={onModalClose}>+</CloseIcon>
+				<Comment>
+					<p onClick={() => isInputFormComments()}> Comments</p>
+					{inputFormComments && (
+						<input
+							value={inputComments}
+							onChange={(event) =>
+								setInputComments(event.target.value)
+							}
+						></input>
+					)}
+					{inputFormComments && (
+						<button
+							onClick={() => {
+								AddComment(columnNum, cardNum, newComment);
+							}}
+						></button>
+					)}
+
+					{comment.map((item, index) => (
+						<Comments
+							key={index}
+							userText={item.userText}
+							author={item.author}
+						/>
+					))}
+				</Comment>
+				<p>{cardAuthor} create this card</p>
 			</Header>
-			<p>{cardAuthor}</p>
+			<DeleteCard>
+				<button onClick={() => isDeletedCard()}>
+					<img src="https://w7.pngwing.com/pngs/169/498/png-transparent-gray-trash-bin-art-computer-icons-icon-remove-s-miscellaneous-text-rectangle-thumbnail.png" />
+				</button>
+			</DeleteCard>
 		</ModWin>
 	);
 };
@@ -75,16 +198,16 @@ const ModWin = styled.div`
 	background-color: #eee3e3;
 	border-radius: 10px;
 `;
-const Name = styled.div`
-	font-family: Arial, Helvetica, sans-serif;
-	font-weight: 700;
-	font-size: 14px;
-	padding: 15px;
+
+const Name = styled.div``;
+const Description = styled.div`
+	padding: 20px 0;
 `;
 
 const Header = styled.div`
 	position: relative;
-	padding: 15px;
+
+	padding: 15px 15px;
 `;
 
 const CloseIcon = styled.span`
@@ -94,4 +217,18 @@ const CloseIcon = styled.span`
 	transform: rotate(45deg);
 	font-size: 24px;
 	cursor: pointer;
+`;
+const Comment = styled.div`
+	margin-bottom: 50px;
+`;
+const DeleteCard = styled.div`
+	position: absolute;
+	top: 90%;
+	right: 10px;
+
+	font-size: 24px;
+	cursor: pointer;
+	img {
+		width: 20px;
+	}
 `;

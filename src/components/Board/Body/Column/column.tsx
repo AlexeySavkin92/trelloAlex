@@ -1,7 +1,7 @@
 import { Card } from "./Card";
 import styled from "styled-components";
 import { FC, useState } from "react";
-
+import { Comm } from "../Column/Modal/Comments/comments";
 import { Modal } from "./Modal";
 import { Form } from "../form";
 import { Board } from "../../board";
@@ -15,7 +15,7 @@ interface Comment {
 	author: string;
 }
 
-interface CardProps {
+export interface CardProps {
 	name: string;
 	author: string;
 	description: string;
@@ -39,6 +39,12 @@ interface Boarding {
 	deleteCard: (columnNum: number, cardNum: number) => void;
 	editColumnName: (columnNum: number, columnName: string) => void;
 	editCardName: (columnNum: number, name: string, cardNum: number) => void;
+	editDescription: (
+		columnNum: number,
+		description: string,
+		cardNum: number
+	) => void;
+	AddComment: (columnNum: number, cardNum: number, newComment: Comm) => void;
 }
 
 export const Column: FC<Boarding> = ({
@@ -49,6 +55,8 @@ export const Column: FC<Boarding> = ({
 	deleteCard,
 	editColumnName,
 	editCardName,
+	editDescription,
+	AddComment,
 }) => {
 	const [isModalFormOpen, setIsModalFormOpen] = useState(false);
 
@@ -80,24 +88,35 @@ export const Column: FC<Boarding> = ({
 		}
 	};
 
+	const setSubmitNameCard = (
+		event: React.KeyboardEvent<HTMLInputElement>
+	) => {
+		if (event.code === "Enter") {
+			addCard(columnNum, newCard);
+			openModalForm();
+		}
+	};
+
 	const [currentCard, setCurrentCard] = useState({
 		name: "",
 		author: "",
 		description: "",
-		comment: {
-			userText: "",
-			author: "",
-		},
+		comment: [
+			{
+				userText: "",
+				author: "",
+			},
+		],
 	});
 
 	const [inputNameCard, setInputNameCard] = useState("");
-	const [inputNameColumn, setInputNameColumn] = useState("");
+	const [inputNameColumn, setInputNameColumn] = useState(columnName);
 	const [inputFormNameColumn, setInputFormNameColumn] = useState(false);
 	const isInputNameColumn = () => {
-		setInputFormNameColumn(!inputFormNameColumn);
+		setInputFormNameColumn(true);
 	};
 	const isInputNameColumnClose = () => {
-		setInputFormNameColumn(!inputFormNameColumn);
+		setInputFormNameColumn(false);
 	};
 
 	const newCard = {
@@ -113,41 +132,17 @@ export const Column: FC<Boarding> = ({
 		],
 	};
 
-	/*	const AddCard = (columnNum: number) => {
-		setState({
-			...state,
-			[columnNum]: {
-				...state[columnNum],
-				cards: [...state[columnNum].cards, newCard],
-			},
-		});
-	};
-	/*	const [cards, setCard] = useState([
-		{
-			name: "",
-			author: "",
-		},
-	]);
-	const AddCard = () => {
-		const newCard = {
-			name: inputNameCard,
-			author: "",
-		};
-		setCard([...cards, newCard]);
-	};  */
-
-	/*onClick={openModalForm}>
-				{isModalFormOpen ? <input /> : "+ Add new card"}*/
-
 	return (
 		<Block>
 			<p onClick={isInputNameColumn}>
 				{inputFormNameColumn ? (
 					<input
+						autoFocus
 						value={inputNameColumn}
 						onChange={(event) =>
 							setInputNameColumn(event.target.value)
 						}
+						onBlur={isInputNameColumnClose}
 						onKeyDown={setSubmitNameColumn}
 					/>
 				) : (
@@ -176,35 +171,46 @@ export const Column: FC<Boarding> = ({
 						deleteCard={deleteCard}
 						columnNum={columnNum}
 						isSetCardNumber={isSetCardNumber}
+						description={item.description}
+						comment={item.comment}
 					/>
 				))}
 			</CarName>
 			{isModalOpen && (
 				<Modal
+					columnName={columnName}
 					name={currentCard.name}
 					cardAuthor={currentCard.author}
+					description={currentCard.description}
 					onModalClose={setModalClose}
 					editCardName={editCardName}
 					columnNum={columnNum}
 					cardNum={CardNumber}
+					editDescription={editDescription}
+					comment={currentCard.comment}
+					deleteCard={deleteCard}
+					AddComment={AddComment}
 				/>
 			)}
 			<Button onClick={openModalForm}>
-				{isModalFormOpen ? "close card" : "+ Add new card"}
+				{isModalFormOpen ? (
+					<button
+						onClick={() => {
+							addCard(columnNum, newCard);
+						}}
+					>
+						Add Card
+					</button>
+				) : (
+					"+ Add new card"
+				)}
 			</Button>
 			{isModalFormOpen && (
 				<input
-					value={inputNameCard}
+					autoFocus
 					onChange={(event) => setInputNameCard(event.target.value)}
-				/>
-			)}
-			{isModalFormOpen && (
-				<input
-					type="submit"
-					value="добавить"
-					onClick={() => {
-						addCard(columnNum, newCard);
-					}}
+					onKeyDown={setSubmitNameCard}
+					onBlur={openModalForm}
 				/>
 			)}{" "}
 		</Block>
